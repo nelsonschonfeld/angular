@@ -9,11 +9,15 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <title>Prueba de Angular</title>
         <script src="includes/angular/angular.min.js" ></script>
+        <script src="includes/angular/angular-route.min.js" ></script>
     </head>
     <body >
+        <p>incluimos el menu</p>
+        <div ng-include src=" 'menu.php' ">
 
+        </div>
 
-        <div ng-show="true">
+        <div ng-show="true" >
             <h1>Curso Angular</h1>
             <p>{{ "Mi tienda con Angular"}}</p>
             <ul>
@@ -56,13 +60,45 @@ and open the template in the editor.
         <div ng-controller="controlerEstilos">
 
             <p ng-style="estil">Este es un parrafo con CSS</p>
-            
+
             <button type="button" ng-click="clickEstiloNuevo()">Estilo</button>
             <button type="button" ng-click="clickSinEstilo()">Sin Estilo</button>
 
         </div>
+
+        <div ng-controller="controlerMostrar">
+            <h1  ng-show="visible">Mostrar Angular</h1>
+            <p  ng-show="visible">{{ "Mi texto mostradp con Angular"}}</p>
+            <button type="button" ng-click="mostrar()">mostrar</button>
+            <button type="button" ng-click="ocultar()">ocultar</button>
+        </div>
+
+        <div ng-controller="controlerCambiarImagen">
+            <img src="includes/imagnes/Desert.jpg" ng-src="includes/imagnes/{{ imagenActual}}">
+            <button type="button" ng-click="mostrarImagen('Desert.jpg')">imag 1</button>
+            <button type="button" ng-click="mostrarImagen('Lighthouse.jpg')">imag 2</button>
+        </div>
+
+        <div ng-view>
+
+        </div>
         <script>
-            var miapp = angular.module('mitienda', []);
+            var miapp = angular.module('mitienda', ['ngRoute']);
+
+            miapp.config(['$routeProvider', function($routeProvider) {
+                    $routeProvider
+                            .when('/uno', {
+                                templateUrl: 'route1.html'
+                            })
+                            .when('/dos', {
+                                templateUrl: 'route2.html'
+                            })
+                            .otherwise({
+                                redirecTo: '/',
+                                templateUrl: 'route3.html'
+                            });
+                }]);
+
             miapp.controller('controler1', ['$scope', function($scope) {
                     $scope.calcularPrecio = function() {
                         var precio = 4;
@@ -124,6 +160,24 @@ and open the template in the editor.
                         $scope.estil = "";
                     };
 
+                }]);
+
+            miapp.controller('controlerMostrar', ['$scope', function($scope) {
+                    $scope.ocultar = function() {
+                        $scope.visible = false;
+                    };
+
+                    $scope.mostrar = function() {
+                        $scope.visible = true;
+                    };
+
+
+                }]);
+
+            miapp.controller('controlerCambiarImagen', ['$scope', function($scope) {
+                    $scope.mostrarImagen = function(imagen) {
+                        $scope.imagenActual = imagen;
+                    };
                 }]);
         </script>
     </body>
